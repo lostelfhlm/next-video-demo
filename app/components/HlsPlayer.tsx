@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-// 型定義は必要に応じて @types を導入
 import Hls from "hls.js";
 
-// 日本語コメント
 type Props = { src: string; poster?: string };
 
 export default function HlsPlayer({ src, poster }: Props) {
@@ -30,9 +28,9 @@ export default function HlsPlayer({ src, poster }: Props) {
     <video
       ref={ref}
       poster={poster}
-      autoPlay         // ← 自動再生（muted 前提）
-      muted            // ← 静音が必須
-      playsInline      // ← iOS インライン再生
+      autoPlay // ← 自動再生（muted 前提）
+      muted // ← 静音が必須
+      playsInline // ← iOS インライン再生
       controls
       preload="metadata"
       style={{ width: "100%", background: "black", borderRadius: 8 }}
