@@ -1,95 +1,37 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { AutoPlayVideo } from "./components/AutoPlayVideo";
+import { YouTubeEmbed } from "./components/YouTubeEmbed";
+import HlsPlayer from "./components/HlsPlayer";
 
-export default function Home() {
+// 日本語コメント：デモ用トップページ
+export default function Page() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
+      <h1 style={{ fontSize: 24, marginBottom: 16 }}>Next.js 動画デモ（自動再生は静音前提）</h1>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      <section style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: 18, marginBottom: 8 }}>1) ローカル MP4</h2>
+        <AutoPlayVideo src="/video/sample.mp4" poster="" />
+        <p style={{ fontSize: 14, opacity: 0.8 }}>
+          ※ iOS では <code>muted</code> + <code>playsInline</code> が必須。クリックで音量を上げるのが一般的。
+        </p>
+      </section>
+
+      <section style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: 18, marginBottom: 8 }}>2) YouTube iframe（静音自動再生）</h2>
+        <YouTubeEmbed id="dQw4w9WgXcQ" />
+        <p style={{ fontSize: 14, opacity: 0.8 }}>
+          埋め込みURLは <code>?autoplay=1&mute=1&playsinline=1</code> を付与し、<code>allow</code> に{" "}
+          <code>autoplay</code> を含める。
+        </p>
+      </section>
+
+      <section style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: 18, marginBottom: 8 }}>3) HLS（m3u8）</h2>
+        <HlsPlayer src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
+        <p style={{ fontSize: 14, opacity: 0.8 }}>
+          iOS はネイティブ HLS、その他は hls.js。静音で自動再生、タップで音量アップが一般的。
+        </p>
+      </section>
+    </main>
   );
 }
