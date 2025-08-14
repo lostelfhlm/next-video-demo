@@ -1,112 +1,89 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { loadYouTubeIframeAPI, YTPlayer } from "../lib/youtubeApi";
 
 type Props = { id: string; title?: string };
 
-// 最小限の YT 型定義（any を使わない）
-type YTPlayer = {
-  playVideo: () => void;
-  pauseVideo: () => void;
-  mute: () => void;
-  unMute: () => void;
-  seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-  destroy: () => void;
-};
-
-declare global {
-  interface Window {
-    YT?: {
-      Player: new (
-        el: HTMLDivElement | string,
-        opts: {
-          videoId: string;
-          playerVars?: Record<string, number>;
-          events?: Record<string, (e: unknown) => void>;
-        }
-      ) => YTPlayer;
-    };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
-let youTubeApiPromise: Promise<void> | null = null;
-function loadYouTubeIframeAPI(): Promise<void> {
-  if (youTubeApiPromise) return youTubeApiPromise;
-  youTubeApiPromise = new Promise<void>((resolve) => {
-    if (typeof window !== "undefined" && window.YT && window.YT.Player) {
-      resolve();
-      return;
-    }
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    window.onYouTubeIframeAPIReady = () => resolve();
-    document.body.appendChild(tag);
-  });
-  return youTubeApiPromise;
-}
-
-/** iOS対策：全画面の“初回クリック”で 0秒から音あり開始（YouTube IFrame API） */
 export default function YouTubeEmbedPrimeStart({
   id,
   title = "YouTube video",
 }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<YTPlayer | null>(null);
-  const domId = useId();
+  const readyRef = useRef(false);
 
   useEffect(() => {
     let disposed = false;
 
     const init = async () => {
       await loadYouTubeIframeAPI();
-      if (disposed || !containerRef.current || !window.YT || !window.YT.Player)
+      if (disposed || !targetRef.current || !window.YT || !window.YT.Player)
         return;
-      playerRef.current = new window.YT.Player(containerRef.current, {
+
+      playerRef.current = new window.YT.Player(targetRef.current, {
         videoId: id,
-        playerVars: {
-          autoplay: 0,
-          mute: 1, // ミュートでロード
-          playsinline: 1,
-          rel: 0,
+        playerVars: { autoplay: 0, mute: 1, playsinline: 1, rel: 0 },
+        events: {
+          onReady: () => {
+            readyRef.current = true;
+            const iframe = targetRef.current?.querySelector(
+              "iframe"
+            ) as HTMLIFrameElement | null;
+            if (iframe) {
+              iframe.style.position = "absolute";
+              iframe.style.inset = "0";
+              iframe.style.width = "100%";
+              iframe.style.height = "100%";
+              iframe.title = title;
+              iframe.setAttribute(
+                "allow",
+                "autoplay; encrypted-media; picture-in-picture; fullscreen"
+              );
+            }
+          },
         },
       });
     };
+
     void init();
 
-    const handler = () => {
-      document.removeEventListener("pointerdown", handler);
+    const onFirstPointer = () => {
+      document.removeEventListener("pointerdown", onFirstPointer);
       const p = playerRef.current;
-      if (p) {
+      if (p && readyRef.current) {
         p.seekTo(0, true);
         p.unMute();
         p.playVideo();
       }
     };
-    document.addEventListener("pointerdown", handler, {
+    document.addEventListener("pointerdown", onFirstPointer, {
       once: true,
       passive: true,
     });
 
     return () => {
       disposed = true;
-      document.removeEventListener("pointerdown", handler);
+      document.removeEventListener("pointerdown", onFirstPointer);
       playerRef.current?.destroy();
       playerRef.current = null;
+      readyRef.current = false;
     };
-  }, [id]);
+  }, [id, title]);
 
   return (
     <div
-      id={`yt-${domId}`}
-      ref={containerRef}
-      title={title}
       style={{
+        position: "relative",
         width: "100%",
-        aspectRatio: "16 / 9",
+        height: 0,
+        paddingTop: "56.25%",
         borderRadius: 8,
         overflow: "hidden",
+        background: "black",
       }}
-    />
+    >
+      <div ref={targetRef} style={{ position: "absolute", inset: 0 }} />
+    </div>
   );
 }

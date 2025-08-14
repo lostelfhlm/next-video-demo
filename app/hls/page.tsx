@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import HlsPlayer from "../components/HlsPlayer"; // 静音オート
 import HlsPlayerWithSound from "../components/HlsPlayerWithSound"; // 有声オート試行
-import HlsPlayerPrimeStart from "../components/HlsPlayerPrimeStart"; // 全画面初回クリック→0秒有声開始
+import HlsPlayerPrimeStart from "../components/HlsPlayerPrimeStart"; // 初回クリック→0秒有声
+import HlsPlayerDelayedStart from "../components/HlsPlayerDelayedStart"; // 遅延有声
 
 export default function PageHls() {
   const box: React.CSSProperties = {
@@ -12,20 +14,25 @@ export default function PageHls() {
   };
   const grid: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "1fr",
+    gridTemplateColumns: "1fr 1fr",
     gap: 24,
+    alignItems: "start",
   };
+  // 半幅（HLSは特に大きいので揃えて半分に）
   const half: React.CSSProperties = {
     width: "50%",
     minWidth: 320,
     maxWidth: 720,
   };
 
+  const [count4, setCount4] = useState(5);
+
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
-      <h1 style={{ fontSize: 24, marginBottom: 8 }}>HLS：挙動比較</h1>
+      <h1 style={{ fontSize: 24, marginBottom: 8 }}>
+        HLS：挙動比較（4パターン）
+      </h1>
 
-      {/* 挙動説明（日本語） */}
       <section
         style={{
           marginBottom: 16,
@@ -37,25 +44,19 @@ export default function PageHls() {
         <strong>挙動の説明：</strong>
         <ul style={{ marginTop: 8 }}>
           <li>
-            <strong>直接リロード</strong>：ユーザー操作が無いので、
-            <em>静音オート</em>は再生、<em>有声オート試行</em>
-            は多くの環境でブロック、<em>「全画面初回クリック→0秒有声開始」</em>
-            は最初のクリックを待ちます。
+            <strong>直接リロード</strong>：ユーザー操作なし →{" "}
+            <em>静音オート</em>は開始、<em>有声オート試行</em>はブロック、
+            <em>初回クリック→0秒有声</em>はクリック待ち、<em>遅延有声</em>
+            はカウント終了で試行。
           </li>
           <li>
             <strong>他ページから遷移</strong>
-            ：遷移クリックが手勢として扱われ、HLSのマニフェストが解析済みであれば、
-            <em>「全画面初回クリック→0秒有声開始」</em>
-            が即時に0秒から音ありで開始します。
+            ：遷移クリックが手勢扱い。準備完了後、<em>有声オート試行</em>
+            は即時開始。<em>遅延有声</em>はカウント後に開始を試行。
           </li>
           <li>
             <strong>ページ内クリック</strong>
-            ：準備が整っていれば、そのクリックで音あり再生が始まります。準備前にクリックした場合は、準備完了後にもう一度クリックしてください。
-          </li>
-          <li>
-            iOS Safari は特に厳格なため、
-            <em>「初回クリックで解錠→0秒から音あり」</em>
-            という設計を推奨します。
+            ：ブロック時はそのクリックで開始（0秒から音あり）。準備前にクリックした場合は、準備完了後にもう一度クリックが必要。
           </li>
         </ul>
       </section>
@@ -76,9 +77,20 @@ export default function PageHls() {
         </div>
 
         <div style={box}>
-          <h2>3) 全画面初回クリック → 0秒から音あり開始</h2>
+          <h2>3) 初回クリック → 0秒から音あり開始</h2>
           <div style={half}>
             <HlsPlayerPrimeStart src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>4) 遅延有声オート（{count4}秒）</h2>
+          <div style={half}>
+            <HlsPlayerDelayedStart
+              src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+              delaySec={5}
+              onTick={setCount4}
+            />
           </div>
         </div>
       </section>

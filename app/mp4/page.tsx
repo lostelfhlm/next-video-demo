@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { AutoPlayVideo } from "../components/AutoPlayVideo"; // 静音オート
 import AutoPlayVideoWithSound from "../components/AutoPlayVideoWithSound"; // 有声オート試行
-import AutoPlayVideoPrimeStart from "../components/AutoPlayVideoPrimeStart"; // 全画面初回クリック→0秒有声開始
+import AutoPlayVideoPrimeStart from "../components/AutoPlayVideoPrimeStart"; // 初回クリック→0秒有声
+import AutoPlayVideoDelayedStart from "../components/AutoPlayVideoDelayedStart"; // 遅延有声
 
 export default function PageMp4() {
   const box: React.CSSProperties = {
@@ -12,21 +14,24 @@ export default function PageMp4() {
   };
   const grid: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "1fr",
+    gridTemplateColumns: "1fr 1fr",
     gap: 24,
+    alignItems: "start",
   };
-  // 半幅ラッパ（コンポーネント内部は100%なので見た目で半分に縮小）
   const half: React.CSSProperties = {
     width: "50%",
     minWidth: 320,
     maxWidth: 720,
   };
 
+  const [count4, setCount4] = useState(5);
+
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
-      <h1 style={{ fontSize: 24, marginBottom: 8 }}>MP4：挙動比較</h1>
+      <h1 style={{ fontSize: 24, marginBottom: 8 }}>
+        MP4：挙動比較（4パターン）
+      </h1>
 
-      {/* 挙動説明（日本語） */}
       <section
         style={{
           marginBottom: 16,
@@ -38,25 +43,21 @@ export default function PageMp4() {
         <strong>挙動の説明：</strong>
         <ul style={{ marginTop: 8 }}>
           <li>
-            このページを<strong>直接リロード</strong>
-            した場合：ユーザー操作が無いため、<em>静音オート</em>は再生開始、
-            <em>有声オート試行</em>は多くの環境でブロック、
-            <em>「全画面初回クリック→0秒有声開始」</em>
-            は最初のクリックを待ちます。
+            <strong>直接リロード</strong>：ユーザー操作が無いため、
+            <em>静音オート</em>は開始、<em>有声オート試行</em>
+            は多くの環境でブロック、<em>初回クリック→0秒有声</em>
+            は最初のクリック待ち、<em>遅延有声</em>
+            はカウント終了で試行（ブロック時はクリックで開始）。
           </li>
           <li>
-            <strong>他ページからリンクで遷移</strong>
-            した場合：そのクリックがユーザー手勢として扱われ、読み込みが整えば
-            <em>「全画面初回クリック→0秒有声開始」</em>
-            が即時に0秒から音ありで開始します。
+            <strong>他ページから遷移</strong>
+            ：遷移クリックが手勢扱いとなり、読み込みが整えば
+            <em>有声オート試行</em>は即時開始。<em>遅延有声</em>
+            はカウント後に開始を試行。
           </li>
           <li>
-            <strong>ページ内のどこかをクリック</strong>
-            すると：ブロックされていた再生が開始（または音声が有効化）されます。
-          </li>
-          <li>
-            iOS Safari
-            では有声の自動再生がより厳格です。準備（メタデータ読込等）前のクリックだった場合は、もう一度クリックが必要になることがあります。
+            <strong>ページ内クリック</strong>
+            ：ブロックされている場合は、そのクリックで開始（0秒から音あり）。
           </li>
         </ul>
       </section>
@@ -77,9 +78,20 @@ export default function PageMp4() {
         </div>
 
         <div style={box}>
-          <h2>3) 全画面初回クリック → 0秒から音あり開始</h2>
+          <h2>3) 初回クリック → 0秒から音あり開始</h2>
           <div style={half}>
             <AutoPlayVideoPrimeStart src="/video/sample.mp4" />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>4) 遅延有声オート（{count4}秒）</h2>
+          <div style={half}>
+            <AutoPlayVideoDelayedStart
+              src="/video/sample.mp4"
+              delaySec={5}
+              onTick={setCount4}
+            />
           </div>
         </div>
       </section>
