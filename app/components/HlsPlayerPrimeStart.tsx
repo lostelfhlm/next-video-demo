@@ -10,11 +10,7 @@ interface HTMLVideoElementWithWebkit extends HTMLVideoElement {
   webkitPlaysInline?: boolean;
 }
 
-/**
- * iOS対策：HLS を全画面の“初回クリック”で 0秒から音あり開始
- * - iOS: ネイティブ HLS
- * - その他: hls.js
- */
+/** iOS対策：全画面の“初回クリック”で 0秒から音あり開始（HLS） */
 export default function HlsPlayerPrimeStart({ src, poster }: Props) {
   const ref = useRef<HTMLVideoElementWithWebkit>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -30,7 +26,6 @@ export default function HlsPlayerPrimeStart({ src, poster }: Props) {
     v.controls = true;
     v.loop = true;
 
-    // iOS Safari: ネイティブ HLS
     if (v.canPlayType("application/vnd.apple.mpegurl")) {
       v.src = src;
       const onLoaded = () => setReady(true);
@@ -38,7 +33,6 @@ export default function HlsPlayerPrimeStart({ src, poster }: Props) {
       return () => v.removeEventListener("loadedmetadata", onLoaded);
     }
 
-    // その他: hls.js
     if (Hls.isSupported()) {
       const hls = new Hls({ lowLatencyMode: true });
       hlsRef.current = hls;
@@ -56,30 +50,29 @@ export default function HlsPlayerPrimeStart({ src, poster }: Props) {
     setReady(false);
   }, [src]);
 
-  // 手勢内で 0秒から音あり開始
   const startFromZeroWithSound = async () => {
     const v = ref.current;
     if (!v || !ready) return;
     try {
       v.muted = true;
-      await v.play();      // 解錠
+      await v.play(); // 解錠
       v.pause();
       v.currentTime = 0;
       v.muted = false;
-      await v.play();      // 本番
-    } catch {
-      // 無視
-    }
+      await v.play(); // 本番
+    } catch {}
   };
 
-  // 全局初回クリックで開始
   useEffect(() => {
     if (!ready) return;
     const handler = () => {
       document.removeEventListener("pointerdown", handler);
       void startFromZeroWithSound();
     };
-    document.addEventListener("pointerdown", handler, { once: true, passive: true });
+    document.addEventListener("pointerdown", handler, {
+      once: true,
+      passive: true,
+    });
     return () => document.removeEventListener("pointerdown", handler);
   }, [ready]);
 

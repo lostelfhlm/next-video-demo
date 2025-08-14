@@ -1,13 +1,13 @@
-// YouTubeを「有声オート再生」パラメータで埋め込む（多くの環境でブロックされる）
+"use client";
+
 type Props = { id: string; title?: string };
 
+/** 参考用：有声オート試行（多くの環境でブロックされる想定） */
 export default function YouTubeEmbedUnmuted({
   id,
   title = "YouTube video",
 }: Props) {
-  // 有声オート再生（mute=0）。多くの環境で自動再生は開始しない想定
-  const src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&playsinline=1&rel=0`;
-
+  const src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=0&playsinline=1&rel=0&enablejsapi=1`;
   return (
     <iframe
       src={src}
