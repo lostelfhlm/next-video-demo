@@ -27,7 +27,10 @@ export default function PageHls() {
   };
 
   const [count4, setCount4] = useState(5);
-  const [count5, setCount5] = useState<{ rest: number; phase: number }>({ rest: 5, phase: 1 });
+  const [count5, setCount5] = useState<{ rest: number; phase: number }>({
+    rest: 5,
+    phase: 1,
+  });
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
@@ -97,7 +100,10 @@ export default function PageHls() {
         </div>
 
         <div style={box}>
-          <h2>5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：{count5.rest}秒）</h2>
+          <h2>
+            5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：
+            {count5.rest}秒）
+          </h2>
           <div style={half}>
             <HlsPlayerDoubleCountdown
               src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
@@ -110,9 +116,7 @@ export default function PageHls() {
 
         <div style={box}>
           <h2>6) 予備枠</h2>
-          <div style={half}>
-            <HlsPlayer src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
-          </div>
+          <div style={half}></div>
         </div>
       </section>
     </main>

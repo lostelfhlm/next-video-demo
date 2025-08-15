@@ -26,7 +26,10 @@ export default function PageMp4() {
   };
 
   const [count4, setCount4] = useState(5);
-  const [count5, setCount5] = useState<{ rest: number; phase: number }>({ rest: 5, phase: 1 });
+  const [count5, setCount5] = useState<{ rest: number; phase: number }>({
+    rest: 5,
+    phase: 1,
+  });
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
@@ -98,7 +101,10 @@ export default function PageMp4() {
         </div>
 
         <div style={box}>
-          <h2>5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：{count5.rest}秒）</h2>
+          <h2>
+            5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：
+            {count5.rest}秒）
+          </h2>
           <div style={half}>
             <AutoPlayVideoDoubleCountdown
               src="/video/sample.mp4"
@@ -111,9 +117,7 @@ export default function PageMp4() {
 
         <div style={box}>
           <h2>6) 予備枠</h2>
-          <div style={half}>
-            <AutoPlayVideo src="/video/sample.mp4" />
-          </div>
+          <div style={half}></div>
         </div>
       </section>
     </main>
