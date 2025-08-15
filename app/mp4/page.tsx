@@ -5,6 +5,7 @@ import { AutoPlayVideo } from "../components/AutoPlayVideo"; // 静音オート
 import AutoPlayVideoWithSound from "../components/AutoPlayVideoWithSound"; // 有声オート試行
 import AutoPlayVideoPrimeStart from "../components/AutoPlayVideoPrimeStart"; // 初回クリック→0秒有声
 import AutoPlayVideoDelayedStart from "../components/AutoPlayVideoDelayedStart"; // 遅延有声
+import AutoPlayVideoDoubleCountdown from "../components/AutoPlayVideoDoubleCountdown"; // 二段階カウントダウン
 
 export default function PageMp4() {
   const box: React.CSSProperties = {
@@ -25,11 +26,12 @@ export default function PageMp4() {
   };
 
   const [count4, setCount4] = useState(5);
+  const [count5, setCount5] = useState<{ rest: number; phase: number }>({ rest: 5, phase: 1 });
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
       <h1 style={{ fontSize: 24, marginBottom: 8 }}>
-        MP4：挙動比較（4パターン）
+        MP4：挙動比較（5パターン）
       </h1>
 
       <section
@@ -91,6 +93,18 @@ export default function PageMp4() {
               src="/video/sample.mp4"
               delaySec={5}
               onTick={setCount4}
+            />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：{count5.rest}秒）</h2>
+          <div style={half}>
+            <AutoPlayVideoDoubleCountdown
+              src="/video/sample.mp4"
+              firstDelaySec={5}
+              secondDelaySec={3}
+              onTick={(rest, phase) => setCount5({ rest, phase })}
             />
           </div>
         </div>
