@@ -5,6 +5,7 @@ import HlsPlayer from "../components/HlsPlayer"; // 静音オート
 import HlsPlayerWithSound from "../components/HlsPlayerWithSound"; // 有声オート試行
 import HlsPlayerPrimeStart from "../components/HlsPlayerPrimeStart"; // 初回クリック→0秒有声
 import HlsPlayerDelayedStart from "../components/HlsPlayerDelayedStart"; // 遅延有声
+import HlsPlayerDoubleCountdown from "../components/HlsPlayerDoubleCountdown"; // 二段階カウントダウン
 
 export default function PageHls() {
   const box: React.CSSProperties = {
@@ -14,23 +15,27 @@ export default function PageHls() {
   };
   const grid: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 24,
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 16,
     alignItems: "start",
   };
   // 半幅（HLSは特に大きいので揃えて半分に）
   const half: React.CSSProperties = {
-    width: "50%",
-    minWidth: 320,
-    maxWidth: 720,
+    width: "100%",
+    minWidth: 200,
+    maxWidth: 400,
   };
 
   const [count4, setCount4] = useState(5);
+  const [count5, setCount5] = useState<{ rest: number; phase: number }>({
+    rest: 5,
+    phase: 1,
+  });
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
       <h1 style={{ fontSize: 24, marginBottom: 8 }}>
-        HLS：挙動比較（4パターン）
+        HLS：挙動比較（6パターン）
       </h1>
 
       <section
@@ -92,6 +97,26 @@ export default function PageHls() {
               onTick={setCount4}
             />
           </div>
+        </div>
+
+        <div style={box}>
+          <h2>
+            5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：
+            {count5.rest}秒）
+          </h2>
+          <div style={half}>
+            <HlsPlayerDoubleCountdown
+              src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+              firstDelaySec={5}
+              secondDelaySec={3}
+              onTick={(rest, phase) => setCount5({ rest, phase })}
+            />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>6) 予備枠</h2>
+          <div style={half}></div>
         </div>
       </section>
     </main>

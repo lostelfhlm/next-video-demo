@@ -5,6 +5,7 @@ import { YouTubeEmbed } from "../components/YouTubeEmbed"; // 静音オート
 import YouTubeEmbedUnmuted from "../components/YouTubeEmbedUnmuted"; // 有声オート試行
 import YouTubeEmbedPrimeStart from "../components/YouTubeEmbedPrimeStart"; // 初回クリック→0秒有声
 import YouTubeEmbedDelayedStart from "../components/YouTubeEmbedDelayedStart"; // 遅延有声
+import YouTubeEmbedDoubleCountdown from "../components/YouTubeEmbedDoubleCountdown"; // 二段階カウントダウン
 
 export default function PageYouTube() {
   const box: React.CSSProperties = {
@@ -14,22 +15,26 @@ export default function PageYouTube() {
   };
   const grid: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 24,
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 16,
     alignItems: "start",
   };
   const half: React.CSSProperties = {
-    width: "50%",
-    minWidth: 320,
-    maxWidth: 720,
+    width: "100%",
+    minWidth: 200,
+    maxWidth: 400,
   };
 
   const [count4, setCount4] = useState(5);
+  const [count5, setCount5] = useState<{ rest: number; phase: number }>({
+    rest: 5,
+    phase: 1,
+  });
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
       <h1 style={{ fontSize: 24, marginBottom: 8 }}>
-        YouTube：挙動比較（4パターン）
+        YouTube：挙動比較（6パターン）
       </h1>
 
       <section
@@ -92,6 +97,26 @@ export default function PageYouTube() {
               onTick={setCount4}
             />
           </div>
+        </div>
+
+        <div style={box}>
+          <h2>
+            5) 二段階カウントダウン（{count5.phase === 1 ? "第1" : "第2"}：
+            {count5.rest}秒）
+          </h2>
+          <div style={half}>
+            <YouTubeEmbedDoubleCountdown
+              id="dQw4w9WgXcQ"
+              firstDelaySec={5}
+              secondDelaySec={3}
+              onTick={(rest, phase) => setCount5({ rest, phase })}
+            />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>6) 予備枠</h2>
+          <div style={half}></div>
         </div>
       </section>
     </main>
