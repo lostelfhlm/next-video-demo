@@ -15,15 +15,15 @@ export default function PageHls() {
   };
   const grid: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 24,
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 16,
     alignItems: "start",
   };
   // 半幅（HLSは特に大きいので揃えて半分に）
   const half: React.CSSProperties = {
-    width: "50%",
-    minWidth: 320,
-    maxWidth: 720,
+    width: "100%",
+    minWidth: 200,
+    maxWidth: 400,
   };
 
   const [count4, setCount4] = useState(5);
@@ -32,7 +32,7 @@ export default function PageHls() {
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
       <h1 style={{ fontSize: 24, marginBottom: 8 }}>
-        HLS：挙動比較（5パターン）
+        HLS：挙動比較（6パターン）
       </h1>
 
       <section
@@ -105,6 +105,13 @@ export default function PageHls() {
               secondDelaySec={3}
               onTick={(rest, phase) => setCount5({ rest, phase })}
             />
+          </div>
+        </div>
+
+        <div style={box}>
+          <h2>6) 予備枠</h2>
+          <div style={half}>
+            <HlsPlayer src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
           </div>
         </div>
       </section>
