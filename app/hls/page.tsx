@@ -6,6 +6,7 @@ import HlsPlayerWithSound from "../components/HlsPlayerWithSound"; // 有声オ�
 import HlsPlayerPrimeStart from "../components/HlsPlayerPrimeStart"; // 初回クリック→0秒有声
 import HlsPlayerDelayedStart from "../components/HlsPlayerDelayedStart"; // 遅延有声
 import HlsPlayerDoubleCountdown from "../components/HlsPlayerDoubleCountdown"; // 二段階カウントダウン
+import HlsPlayerButtonStart from "../components/HlsPlayerButtonStart"; // ボタンクリック後再生
 
 export default function PageHls() {
   const box: React.CSSProperties = {
@@ -63,6 +64,10 @@ export default function PageHls() {
             <strong>ページ内クリック</strong>
             ：ブロック時はそのクリックで開始（0秒から音あり）。準備前にクリックした場合は、準備完了後にもう一度クリックが必要。
           </li>
+          <li>
+            <strong>ボタンクリック後再生</strong>
+            ：専用のボタンをクリックするとビデオが表示され、準備完了後に音声ありで自動再生を開始します。
+          </li>
         </ul>
       </section>
 
@@ -115,8 +120,10 @@ export default function PageHls() {
         </div>
 
         <div style={box}>
-          <h2>6) 予備枠</h2>
-          <div style={half}></div>
+          <h2>6) ボタンクリック後再生</h2>
+          <div style={half}>
+            <HlsPlayerButtonStart src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
+          </div>
         </div>
       </section>
     </main>

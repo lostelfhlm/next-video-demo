@@ -6,6 +6,7 @@ import AutoPlayVideoWithSound from "../components/AutoPlayVideoWithSound"; // �
 import AutoPlayVideoPrimeStart from "../components/AutoPlayVideoPrimeStart"; // 初回クリック→0秒有声
 import AutoPlayVideoDelayedStart from "../components/AutoPlayVideoDelayedStart"; // 遅延有声
 import AutoPlayVideoDoubleCountdown from "../components/AutoPlayVideoDoubleCountdown"; // 二段階カウントダウン
+import AutoPlayVideoButtonStart from "../components/AutoPlayVideoButtonStart"; // ボタンクリック後再生
 
 export default function PageMp4() {
   const box: React.CSSProperties = {
@@ -64,6 +65,10 @@ export default function PageMp4() {
             <strong>ページ内クリック</strong>
             ：ブロックされている場合は、そのクリックで開始（0秒から音あり）。
           </li>
+          <li>
+            <strong>ボタンクリック後再生</strong>
+            ：専用のボタンをクリックするとビデオが表示され、音声ありで自動再生を開始します。
+          </li>
         </ul>
       </section>
 
@@ -116,8 +121,10 @@ export default function PageMp4() {
         </div>
 
         <div style={box}>
-          <h2>6) 予備枠</h2>
-          <div style={half}></div>
+          <h2>6) ボタンクリック後再生</h2>
+          <div style={half}>
+            <AutoPlayVideoButtonStart src="/video/sample.mp4" />
+          </div>
         </div>
       </section>
     </main>

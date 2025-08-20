@@ -6,6 +6,7 @@ import YouTubeEmbedUnmuted from "../components/YouTubeEmbedUnmuted"; // 有声�
 import YouTubeEmbedPrimeStart from "../components/YouTubeEmbedPrimeStart"; // 初回クリック→0秒有声
 import YouTubeEmbedDelayedStart from "../components/YouTubeEmbedDelayedStart"; // 遅延有声
 import YouTubeEmbedDoubleCountdown from "../components/YouTubeEmbedDoubleCountdown"; // 二段階カウントダウン
+import YouTubeEmbedButtonStart from "../components/YouTubeEmbedButtonStart"; // ボタンクリック後再生
 
 export default function PageYouTube() {
   const box: React.CSSProperties = {
@@ -63,6 +64,10 @@ export default function PageYouTube() {
             <strong>ページ内クリック</strong>
             ：ブロックされている場合は、そのクリックで開始（0秒から音あり）。
           </li>
+          <li>
+            <strong>ボタンクリック後再生</strong>
+            ：専用のボタンをクリックするとYouTubeプレーヤーが表示され、API準備完了後に音声ありで自動再生を開始します。
+          </li>
         </ul>
       </section>
 
@@ -115,8 +120,10 @@ export default function PageYouTube() {
         </div>
 
         <div style={box}>
-          <h2>6) 予備枠</h2>
-          <div style={half}></div>
+          <h2>6) ボタンクリック後再生</h2>
+          <div style={half}>
+            <YouTubeEmbedButtonStart id="dQw4w9WgXcQ" />
+          </div>
         </div>
       </section>
     </main>
