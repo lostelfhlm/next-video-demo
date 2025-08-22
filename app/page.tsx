@@ -12,7 +12,9 @@ export default function Home() {
 
   return (
     <main style={{ padding: 24, fontFamily: "system-ui, -apple-system" }}>
-      <h1 style={{ fontSize: 28, marginBottom: 16 }}>Autoplay 動作テスト</h1>
+      <h1 style={{ fontSize: 28, marginBottom: 16 }}>
+        音声・動画自動再生テスト
+      </h1>
 
       <section
         style={{
@@ -24,9 +26,9 @@ export default function Home() {
       >
         <strong>プロジェクト概要：</strong>
         <p style={{ marginTop: 8, marginBottom: 12 }}>
-          このプロジェクトは、さまざまなブラウザ環境での動画自動再生の挙動を検証するためのテストサイトです。
+          異なるブラウザ環境での音声・動画自動再生の挙動を検証するためのテストです。
           ブラウザの自動再生ポリシーは環境によって異なるため、各種パターンを用意して比較できるようにしています。
-          MP4、HLS、YouTubeの3種類のメディアタイプについて、6つの再生パターンをテストできます。
+          MP3、MP4、HLS、YouTubeの4種類のメディアタイプについて、6つの再生パターンをテストできます。
         </p>
       </section>
 
@@ -38,26 +40,7 @@ export default function Home() {
           fontSize: 14,
           opacity: 0.95,
         }}
-      >
-        <strong>メディアタイプの特徴：</strong>
-        <ul style={{ marginTop: 8, marginBottom: 12 }}>
-          <li>
-            <strong>MP4：</strong>
-            通常の動画ファイル。シンプルで互換性が高いが、アダプティブビットレートには対応していません。
-          </li>
-          <li>
-            <strong>HLS：</strong>
-            HTTP Live
-            Streaming。アダプティブビットレートに対応し、ネットワーク状況に応じて品質が変化します。
-            iOSではネイティブサポート、他の環境ではhls.jsライブラリを使用しています。
-          </li>
-          <li>
-            <strong>YouTube：</strong>
-            YouTube IFrame
-            API。外部サービスの埋め込み動画で、プラットフォーム固有の制約があります。
-          </li>
-        </ul>
-      </section>
+      ></section>
 
       {/* テストパターンの説明 */}
       <section
@@ -139,6 +122,8 @@ export default function Home() {
       </section>
 
       <nav style={listStyle}>
+        <Link href="/mp3">🔊 MP3 再生テスト（ローカル音源）</Link>
+        <Link href="/mp3-network">🔊 MP3 再生テスト（ネットワーク音源）</Link>
         <Link href="/mp4">🎥 MP4 再生テスト</Link>
         <Link href="/hls">📡 HLS 再生テスト</Link>
         <Link href="/youtube">▶️ YouTube 再生テスト</Link>
