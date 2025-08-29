@@ -28,7 +28,8 @@ export default function Home() {
         <p style={{ marginTop: 8, marginBottom: 12 }}>
           異なるブラウザ環境での音声・動画自動再生の挙動を検証するためのテストです。
           ブラウザの自動再生ポリシーは環境によって異なるため、各種パターンを用意して比較できるようにしています。
-          MP3、MP4、HLS、YouTubeの4種類のメディアタイプについて、6つの再生パターンをテストできます。
+          MP3（標準とWebAudio
+          API）、MP4、HLS、YouTubeの各種メディアタイプについて、6つの再生パターンをテストできます。
         </p>
       </section>
 
@@ -124,6 +125,7 @@ export default function Home() {
       <nav style={listStyle}>
         <Link href="/mp3">🔊 MP3 再生テスト（ローカル音源）</Link>
         <Link href="/mp3-network">🔊 MP3 再生テスト（ネットワーク音源）</Link>
+        <Link href="/webaudio">🎵 WebAudio API 再生テスト</Link>
         <Link href="/mp4">🎥 MP4 再生テスト</Link>
         <Link href="/hls">📡 HLS 再生テスト</Link>
         <Link href="/youtube">▶️ YouTube 再生テスト</Link>
